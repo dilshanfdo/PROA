@@ -6,11 +6,13 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
+import PopupWindow from "./PopupWindow";
 
 // const center = { lat: -37.840935, lng: 144.946457 };
 
 function Map() {
   const [weatherStations, setWeatherStations] = useState([]);
+  const [selectedStation, setSelectedStation] = useState(null);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.GoogleMap_API,
@@ -53,8 +55,26 @@ function Map() {
               lat: parseFloat(weatherStation.latitude),
               lng: parseFloat(weatherStation.longitude),
             }}
+            onClick={(e) => setSelectedStation(weatherStation)}
           ></Marker>
         ))}
+        {selectedStation && (
+          <InfoWindow
+            position={{
+              lat: parseFloat(selectedStation.latitude),
+              lng: parseFloat(selectedStation.longitude),
+            }}
+            // icon={{
+            //   url:'/iconName.png',
+            //   scaledSize: new window.google.maps.Size(25, 25)
+            // }}
+            onCloseClick={() => {
+              setSelectedStation(null);
+            }}
+          >
+            <PopupWindow selectedStation={selectedStation}></PopupWindow>
+          </InfoWindow>
+        )}
       </GoogleMap>
     </div>
   );

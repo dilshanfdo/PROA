@@ -4,16 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class WeatherStation extends Model
+class Variable extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function variable(): HasMany
+    public function weather_station(): BelongsTo
     {
-        return $this->hasMany(Variable::class);
+        return $this->belongsTo(WeatherStation::class);
     }
 }

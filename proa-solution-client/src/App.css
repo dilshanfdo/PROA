@@ -2,3 +2,26 @@
   height: 100vh;
   width: 100vw;
 }
+
+.popup-window-container {
+  border: 4px solid #f56a2f;
+  border-radius: 8px;
+  min-width: 230px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px;
+}
+
+.popup-window-title {
+  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #f56a2f;
+}
+
+.popup-window-info-wrapper {
+  display: inline-flex;
+  column-gap: 10px;
+}
