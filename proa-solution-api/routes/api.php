@@ -21,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('weather-station', [WeatherStationController::class, 'index'])->name('weather-station.index');
+Route::get('latest-weather-measurement/{id}', [MeasurementController::class, 'getRequiredInfo'])->name('weather-station.getRequiredInfo');

@@ -13,6 +13,7 @@ import PopupWindow from "./PopupWindow";
 function Map() {
   const [weatherStations, setWeatherStations] = useState([]);
   const [selectedStation, setSelectedStation] = useState(null);
+  const [latestWeatherInfo, setLatestWeatherInfo] = useState(null);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.GoogleMap_API,
@@ -29,6 +30,20 @@ function Map() {
       .get(`http://localhost:8000/api/weather-station`)
       .then((response) => {
         setWeatherStations(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleClickStation = (weatherStation) => {
+    axios
+      .get(
+        `http://localhost:8000/api/latest-weather-measurement/${weatherStation.id}`
+      )
+      .then((response) => {
+        setLatestWeatherInfo(response.data);
+        setSelectedStation(weatherStation);
       })
       .catch((error) => {
         console.log(error);
@@ -55,7 +70,7 @@ function Map() {
               lat: parseFloat(weatherStation.latitude),
               lng: parseFloat(weatherStation.longitude),
             }}
-            onClick={(e) => setSelectedStation(weatherStation)}
+            onClick={(e) => handleClickStation(weatherStation)}
           ></Marker>
         ))}
         {selectedStation && (
@@ -72,7 +87,10 @@ function Map() {
               setSelectedStation(null);
             }}
           >
-            <PopupWindow selectedStation={selectedStation}></PopupWindow>
+            <PopupWindow
+              selectedStation={selectedStation}
+              latestWeatherInfo={latestWeatherInfo}
+            ></PopupWindow>
           </InfoWindow>
         )}
       </GoogleMap>
