@@ -9,6 +9,9 @@ use App\Models\Variable;
 
 class MeasurementController extends Controller
 {
+    /**
+     * Get all latest weather information based on weather station
+     */
     public function getRequiredInfo($id)
     {
         $dataTableName = 'data_'.$id;

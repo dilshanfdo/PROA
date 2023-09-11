@@ -7,6 +7,7 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 import PopupWindow from "./PopupWindow";
+import StateFilter from "./StateFilter";
 
 // const center = { lat: -37.840935, lng: 144.946457 };
 
@@ -22,12 +23,12 @@ function Map() {
   const center = useMemo(() => ({ lat: -25.274399, lng: 133.775131 }), []);
 
   useEffect(() => {
-    getWeatherStations();
+    getWeatherStations("All");
   }, []);
 
-  const getWeatherStations = () => {
+  const getWeatherStations = (selectedState) => {
     axios
-      .get(`http://localhost:8000/api/weather-station`)
+      .get(`http://localhost:8000/api/weather-station/${selectedState}`)
       .then((response) => {
         setWeatherStations(response.data);
       })
@@ -50,11 +51,18 @@ function Map() {
       });
   };
 
+  const handleChangeState = (selectedOption) => {
+    const selectedState = selectedOption.value;
+    setSelectedStation(null);
+    getWeatherStations(selectedState);
+  };
+
   if (!isLoaded) {
     return <div>Loading...</div>;
   }
   return (
     <div className="map-container">
+      <StateFilter handleChangeState={handleChangeState}></StateFilter>
       <GoogleMap
         center={center}
         zoom={5}
