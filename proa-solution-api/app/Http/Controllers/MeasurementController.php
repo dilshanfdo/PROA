@@ -19,7 +19,13 @@ class MeasurementController extends Controller
 
         $latestWeatherMeasurements = DB::table($dataTableName)->latest('timestamp')->first();
         // $variables = WeatherStation::find($id)->variable;
-        $variables = Variable::where('id', '=', $id)->get();
+
+        $variables = Variable::join('weather_stations', 'weather_stations.id', '=', 'variables.id')
+        ->where('variables.id', $id)
+        ->select('variables.*')
+        ->get();
+
+        // $variables = Variable::where('id', '=', $id)->get();
 
         foreach($latestWeatherMeasurements as $key => $value){
             if($key == 'timestamp'){
@@ -27,11 +33,11 @@ class MeasurementController extends Controller
             }
             foreach($variables as $var){
                 if($var->name == $key){
-                    $longName = str_replace('.', '', $var['long_name']);
+                    $longName = str_replace('.', '', $var->long_name);
                     $variableWeatherInfo = (object)array(
                         'name' => $key,
                         'long_name' => $longName,
-                        'unit' => $var['unit'],
+                        'unit' => $var->unit,
                         'value' => $value,
                         'timestamp' => $latestWeatherMeasurements->timestamp
                     );
